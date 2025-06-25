@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:16-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: fedescrm
+      POSTGRES_PASSWORD: fedescrm123
+      POSTGRES_DB: fedescrm_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    ports:
+      - 4000:4000
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+
+volumes:
+  db_data:
